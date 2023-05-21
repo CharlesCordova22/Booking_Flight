@@ -1,0 +1,21 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'MuseoModerno';
+    box-sizing: border-box;
+}
+body{
+    background-color: white;
+    color: white;
+}
+#search-flight{
+    width: 100%;
+    height: 100vh;
+}
+.container1{
+    padding: 0px;
+    color: black;
+}
+.conatianer2 input{
+    padding: 10px;
+}
