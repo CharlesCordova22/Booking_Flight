@@ -1,30 +1,23 @@
 <?php 
-    require('fetch_charter.php');
+    require('local_setting.php');
+
+    $fetchQuery = "SELECT * FROM flights";
+    
+    $result = mysqli_query($conn, $fetchQuery);
     
     error_reporting(0);
-if (isset($_POST['search'])) {
-    $searchInput = $_POST['search_input'];
+    if (isset($_POST['search'])) {
+        $searchInput = $_POST['search_input'];
 
-    $fetchQuery = "SELECT *
-                    FROM charter
-                    INNER JOIN aircraft
-                        ON charter.AC_NUMBER = aircraft.AC_NUMBER
-                    INNER JOIN model
-                        ON aircraft.MOD_CODE = model.MOD_CODE
-                    WHERE charter.AC_NUMBER LIKE '%$searchInput%'
-                        OR aircraft.MOD_CODE LIKE '%$searchInput%'
-                        OR charter.CHAR_TRIP LIKE '%$searchInput%'
-                        OR charter.CHAR_DATE LIKE '%$searchInput%'
-                        OR charter.CHAR_DESTINATION LIKE '%$searchInput%'";
-} else {
-    $fetchQuery = "SELECT *
-                    FROM charter
-                    INNER JOIN aircraft
-                        ON charter.AC_NUMBER = aircraft.AC_NUMBER
-                    INNER JOIN model
-                        ON aircraft.MOD_CODE = model.MOD_CODE";
-}
-$result = mysqli_query($conn, $fetchQuery);
+        $query = "SELECT * FROM flights WHERE ORIGIN LIKE '%$searchInput%' OR DESTINATION LIKE '%$searchInput%'";
+    
+        $result = mysqli_query($conn, $query);
+    } else {
+
+        $query = "SELECT * FROM flights";
+
+        $result = mysqli_query($conn, $query);
+    }
     
 ?>
 <!DOCTYPE html>
@@ -130,7 +123,7 @@ $result = mysqli_query($conn, $fetchQuery);
             border: 1px solid rgba(34,34,34,0.8);
             border-radius: 0px;
             margin: 50px;
-            margin-top: 90px;
+            margin-top: 140px;
         }
         .login-admin a{
                 text-decoration: none;
@@ -260,15 +253,47 @@ $result = mysqli_query($conn, $fetchQuery);
         margin-left: 0px;
     }
     .search input{
-        padding-left: 30px;
-        
+        padding-left: 20px;
         margin-left: 50px;
         margin-bottom: -10px;
-        margin-top: 40px;
+        margin-top: 125px;
         font-size: 17px;
-        width: 300px;
+        width: 305px;
         height: 40px;
         position: absolute;
+        background: rgba(255,255,2555,0.7);
+        box-shadow: rgba(0,0,0,0.3) 0px 19px 38px, rgba(0,0,0,0.22) 0px 15px 12px;
+    }
+    .addflight {
+        color: black;
+        font-weight: bold;
+        font-size: 17px;
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .addflight input{
+        padding-left: 20px;
+        font-size: 17px;
+        width: 200px;
+        height: 40px;
+        background: rgba(255,255,2555,0.7);
+        box-shadow: rgba(0,0,0,0.3) 0px 19px 38px, rgba(0,0,0,0.22) 0px 15px 12px;
+    }
+    .addflight select{
+        font-size: 17px;
+        width: 50px;
+        height: 40px;
+        background: rgba(255,255,2555,0.7);
+        box-shadow: rgba(0,0,0,0.3) 0px 19px 38px, rgba(0,0,0,0.22) 0px 15px 12px;
+    }
+    .addflight button{
+        font-size: 13px;
+        padding-top: 3px;
+        cursor: pointer;
+        width: 100px;
+        height: 40px;
         background: rgba(255,255,2555,0.7);
         box-shadow: rgba(0,0,0,0.3) 0px 19px 38px, rgba(0,0,0,0.22) 0px 15px 12px;
     }
@@ -280,64 +305,61 @@ $result = mysqli_query($conn, $fetchQuery);
                 <img src="image/akora-high-resolution-logo-white-on-transparent-background.png" class="logo">
                 <ul id="sidemenu">
                     <li><a href="add_aircraft_page.php">ADD AIRCRAFT</a></li>
-                    <li><a href="add_flight_page.php">ADD FLIGHTS</a></li>
                     <li><a href="main.php">LOG-OUT</a></li>
                 </ul>
             </nav>
                 <div class="search">
-                    <form method="POST" action="admin-dashboard.php">
-                        <i class="fa fa-search"></i><input name="search_input" type="text" placeholder="SEARCH AIRCRAFT NUMBER">
+                    <form method="POST" action="add_flight_page.php">
+                        <i class="fa fa-search"></i><input name="search_input" type="text" placeholder="SEARCH ORIGIN/DESTINATION">
                         <button type="submit" name="search" style="display: none;"></button>
                     </form>
                 </div>
+                <div class="addflight">
+                <form action="add_flight_backend.php" method="POST">
+                        <label>ORIGIN:</label>
+                        <input type="text" name="ORIGIN">
+                        <label> DESTINATION:</label>
+                        <input type="text" name="DESTINATION">
+                        <label> AC NUMBER:</label>
+                        <select name="AC_NUMBER">
+                            <?php
+                            $acNumberQuery = "SELECT AC_NUMBER FROM aircraft";
+                            $acNumberResult = mysqli_query($conn, $acNumberQuery);
+
+                            while ($row = mysqli_fetch_array($acNumberResult)) {
+                                $acNumber = $row['AC_NUMBER'];
+                                echo "<option value='$acNumber'>$acNumber</option>";
+                            }
+                            ?>
+                        </select>
+                        <label> DATE:</label>
+                        <input type="date" name="DATE">
+                        <label> PRICE:</label>
+                        <input type="number" name="PRICE">
+                    <button>ADD FLIGHTS</button>
+                </form>
+            </div>
                 <div class="list">
                 <table>
                         <tr>
+                            <th>FLIGHT NUMBER</th>
+                            <th>ORIGIN</th>
+                            <th>DESTINATION</th>
                             <th>AC NUMBER</th>
-                            <th>MOD CODE</th>
-                            <th>CHARTER TRIP</th>
-                            <th>CHARTER DATE</th>
-                            <th>CHARTER DESTINATION</th>
-                            <th>STATUS</th>
-                            <th>ACTIONS</th>
+                            <th>DATE</th>
+                            <th>PRICE</th>
                         </tr>
                         <?php
                         $i=0;
                             while($row = mysqli_fetch_array($result)) {
                         ?>
                         <tr>
+                            <td><a><?php echo $row['FLIGHT_NUM']; ?></a></td>
+                            <td><a><?php echo $row['ORIGIN']; ?></a></td>
+                            <td><a><?php echo $row['DESTINATION']; ?></a></td>
                             <td><a><?php echo $row['AC_NUMBER']; ?></a></td>
-                            <td><a><?php echo $row['MOD_CODE']; ?></a></td>
-                            <td><a><?php echo $row['CHAR_TRIP']; ?></a></td>
-                            <td><a><?php echo $row['CHAR_DATE']; ?></a></td>
-                            <td><a><?php echo $row['CHAR_DESTINATION']; ?></a></td>
-                            <td><a><?php echo $row['is_deleted']; ?></a></td>
-                            <td>
-                                <button class="edit_style myBtn"><i class="fa">&#xf044;</i></button>
-
-                                <div class="myModal modal">
-                                    <div class="modal-content">
-                                        <div class="update-tag">
-                                            <h1>UPDATE FLIGHT</h1>
-                                            <span class="close">&times;</span>
-                                        </div>
-                                        <div class="update-content">
-                                            <form action="update_flight_backend.php?CHAR_TRIP=<?php echo $row['CHAR_TRIP']?>" method="POST">
-                                            
-                                                <input type="text" name="AC_NUMBER" value="<?php echo $row['AC_NUMBER']?>">
-                                                <input type="text" name="MOD_CODE"value="<?php echo $row['MOD_CODE']?>">
-                                                <input type="date" name="CHAR_DATE" value="<?php echo $row['CHAR_DATE']?>">
-                                                <button class="btn-update">UPDATE</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <form action="delete_charter.php">
-                                <input name="CHAR_TRIP" type="hidden" value="<?php echo $row['CHAR_TRIP']?>">
-                                    <button class="delete_style"><i class="material-icons">&#xe872;</i></button>
-                                </form>
-                            </td>
+                            <td><a><?php echo $row['DATE']; ?></a></td>
+                            <td><a><?php echo $row['PRICE']; ?></a></td>
                         </tr>
                     <?php
                     $i++;
