@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2023 at 04:33 PM
+-- Generation Time: May 23, 2023 at 03:25 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -112,11 +112,9 @@ CREATE TABLE `aircraft` (
 --
 
 INSERT INTO `aircraft` (`AC_NUMBER`, `MOD_CODE`, `AC_TTAF`, `AC_TTEL`, `AC_TTER`) VALUES
-(1, 1, '20', '20', '20'),
-(2, 1, '30', '30', '30'),
-(3, 2, '20', '10', '20'),
-(4, 1, '20', '30', '20'),
-(5, 2, '20', '30', '20');
+(1, 1, '10', '20', '30'),
+(2, 2, '20', '10', '30'),
+(3, 3, '30', '20', '10');
 
 -- --------------------------------------------------------
 
@@ -134,24 +132,16 @@ CREATE TABLE `charter` (
   `CHAR_HOURS_WAIT` decimal(10,2) DEFAULT NULL,
   `CHAR_FUEL_GALLONS` decimal(10,2) DEFAULT NULL,
   `CHAR_OIL_QTS` decimal(10,2) DEFAULT NULL,
-  `CUS_CODE` int(11) DEFAULT NULL
+  `CUS_CODE` int(11) DEFAULT NULL,
+  `is_deleted` enum('Booked','Cancelled') NOT NULL DEFAULT 'Booked'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `charter`
 --
 
-INSERT INTO `charter` (`CHAR_TRIP`, `CHAR_DATE`, `AC_NUMBER`, `CHAR_DESTINATION`, `CHAR_DISTANCE`, `CHAR_HOURS_FLOWN`, `CHAR_HOURS_WAIT`, `CHAR_FUEL_GALLONS`, `CHAR_OIL_QTS`, `CUS_CODE`) VALUES
-(1, '0000-00-00', 0, '<br />\r\n<b>Warning</b>:  Undefined variable $row i', 0.00, 0.00, 0.00, 0.00, 0.00, 3),
-(2, '0000-00-00', 0, '<br />\r\n<b>Warning</b>:  Undefined variable $row i', 0.00, 0.00, 0.00, 0.00, 0.00, 7),
-(3, '0000-00-00', 0, '<br />\r\n<b>Warning</b>:  Undefined variable $row i', 0.00, 0.00, 0.00, 0.00, 0.00, 8),
-(8, '2023-05-16', 2, 'MANILA', 0.00, 0.00, 0.00, 0.00, 0.00, 13),
-(9, '2023-05-24', 1, 'MANILA', 0.00, 0.00, 0.00, 0.00, 0.00, 14),
-(10, '2023-05-24', 4, 'BOHOL', 0.00, 0.00, 0.00, 0.00, 0.00, 15),
-(11, '2023-05-09', 3, 'BOHOL', 0.00, 0.00, 0.00, 0.00, 0.00, 16),
-(13, '2023-05-24', 3, 'BOHOL', 0.00, 0.00, 0.00, 0.00, 0.00, 18),
-(20, '2023-05-26', 2, 'MANILA', 0.00, 0.00, 0.00, 0.00, 0.00, 25),
-(22, '2023-05-24', 1, 'MANILA', 0.00, 0.00, 0.00, 0.00, 0.00, 27);
+INSERT INTO `charter` (`CHAR_TRIP`, `CHAR_DATE`, `AC_NUMBER`, `CHAR_DESTINATION`, `CHAR_DISTANCE`, `CHAR_HOURS_FLOWN`, `CHAR_HOURS_WAIT`, `CHAR_FUEL_GALLONS`, `CHAR_OIL_QTS`, `CUS_CODE`, `is_deleted`) VALUES
+(1, '2023-05-23', 1, 'MANILA', 0.00, 0.00, 0.00, 0.00, 0.00, 1, 'Cancelled');
 
 -- --------------------------------------------------------
 
@@ -178,34 +168,16 @@ CREATE TABLE `customer` (
   `CUS_INITIAL` varchar(2) DEFAULT NULL,
   `CUS_AREACODE` int(11) DEFAULT NULL,
   `CUS_PHONE` varchar(12) DEFAULT NULL,
-  `CUS_BALANCE` decimal(10,2) DEFAULT NULL
+  `CUS_BALANCE` decimal(10,2) DEFAULT NULL,
+  `is_deleted` enum('Booked','Cancelled') NOT NULL DEFAULT 'Booked'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`CUS_CODE`, `CUS_LNAME`, `CUS_FNAME`, `CUS_INITIAL`, `CUS_AREACODE`, `CUS_PHONE`, `CUS_BALANCE`) VALUES
-(1, 'Cordovaaaaaasas', 'Charles', 's', 991, '2199216', 444444.00),
-(3, 'Cordova', 'Charles', 'B', 991, '2199216', 0.00),
-(4, 'Cordova', 'TAE', 'IG', 991, '2199216', 0.00),
-(5, 'ASDASD', 'ASDASD', 'A', 991, '2199216', 0.00),
-(6, 'Cordova', 'Charles', 'A', 991, '2199216', 0.00),
-(7, 'Cordova', 'rAJ', 'S', 991, '2199216', 0.00),
-(8, 'Cordova', 'DANMAR', 'b', 991, '2199216', 0.00),
-(9, 'Cordova', 'abdnormal', 's', 991, '2199216', 3000.00),
-(12, 'Cordova', 'ANTON', 'BU', 991, '2199216', 2000.00),
-(13, 'sssss', 'rja', 'bu', 991, '2199216', 2000.00),
-(14, 'Cordova', 'Joseph', 'b', 6002, '09912199217', 2000.00),
-(15, 'Sophia', 'Emmanuel', 'G', 6003, '0999123884', 2500.00),
-(16, 'Gwapo', 'Lloyd', 'D', 8890, '091212312312', 1000.00),
-(17, 'Gwapo', 'Lloyd', 'D', 8890, '091212312312', 1000.00),
-(18, 'Cabucos', 'Lester', 'K', 6000, '091212299222', 5500.00),
-(19, 'Allen', 'Sophia', 's', 4444, '211231231231', 5500.00),
-(20, 'Dadelahi', 'Raj', 'D', 6666, '0991219927', 2000.00),
-(21, 'Fajardo', 'Joanna', 'C', 6002, '099121312312', 2000.00),
-(25, 'Cordova', 'Cheer', 'B', 6002, '09912199216', 3000.00),
-(27, 'Cordova', 'Charles', 'b', 991, '2199216', 2000.00);
+INSERT INTO `customer` (`CUS_CODE`, `CUS_LNAME`, `CUS_FNAME`, `CUS_INITIAL`, `CUS_AREACODE`, `CUS_PHONE`, `CUS_BALANCE`, `is_deleted`) VALUES
+(1, 'Cordova', 'Charles', 'B', 991, '2199216', 1500.00, 'Cancelled');
 
 -- --------------------------------------------------------
 
@@ -262,14 +234,12 @@ CREATE TABLE `flights` (
 --
 
 INSERT INTO `flights` (`FLIGHT_NUM`, `ORIGIN`, `DESTINATION`, `AC_NUMBER`, `DATE`, `PRICE`) VALUES
-(5, 'CEBU', 'MANILA', 1, '2023-05-24', 2000),
-(6, 'CEBU', 'MANILA', 2, '2023-05-26', 3000),
-(7, 'CEBU', 'MANILA', 1, '2023-05-31', 4000),
-(8, 'CEBU', 'MANILA', 2, '2023-05-23', 5000),
-(9, 'CEBU', 'BOHOL', 3, '2023-05-09', 1000),
-(10, 'CEBU', 'BOHOL', 4, '2023-05-24', 2500),
-(11, 'CEBU', 'BOHOL', 5, '2023-05-29', 3000),
-(12, 'CEBU', 'BOHOL', 5, '2023-05-24', 5500);
+(1, 'CEBU', 'MANILA', 1, '2023-05-23', 1500),
+(2, 'CEBU', 'MANILA', 2, '2023-05-23', 1700),
+(3, 'CEBU', 'BOHOL', 1, '2023-05-24', 6000),
+(4, 'CEBU', 'BOHOL', 2, '2023-05-27', 4500),
+(5, 'CEBU', 'PALAWAN', 3, '2023-05-03', 7000),
+(6, 'CEBU', 'PALAWAN', 3, '2023-07-01', 600);
 
 -- --------------------------------------------------------
 
@@ -289,8 +259,9 @@ CREATE TABLE `model` (
 --
 
 INSERT INTO `model` (`MOD_CODE`, `MOD_MANUFACTURER`, `MOD_NAME`, `MOD_CHG_MILE`) VALUES
-(1, 'BOEINGasas', 'XZ900', '200'),
-(2, 'AIRBUS', 'AZXC900', '400');
+(1, 'Airbus', 'AC290', '100'),
+(2, 'BOEING', 'XZ9009', '200'),
+(3, 'Black Horse', 'FG605', '150');
 
 -- --------------------------------------------------------
 
@@ -343,7 +314,8 @@ INSERT INTO `user` (`username`, `userpassword`) VALUES
 -- Indexes for table `aircraft`
 --
 ALTER TABLE `aircraft`
-  ADD PRIMARY KEY (`AC_NUMBER`,`MOD_CODE`);
+  ADD PRIMARY KEY (`AC_NUMBER`) USING BTREE,
+  ADD KEY `MOD_CODE` (`MOD_CODE`);
 
 --
 -- Indexes for table `charter`
@@ -409,19 +381,19 @@ ALTER TABLE `rating`
 -- AUTO_INCREMENT for table `aircraft`
 --
 ALTER TABLE `aircraft`
-  MODIFY `AC_NUMBER` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `AC_NUMBER` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `charter`
 --
 ALTER TABLE `charter`
-  MODIFY `CHAR_TRIP` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `CHAR_TRIP` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `CUS_CODE` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `CUS_CODE` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `employee`
@@ -433,7 +405,7 @@ ALTER TABLE `employee`
 -- AUTO_INCREMENT for table `flights`
 --
 ALTER TABLE `flights`
-  MODIFY `FLIGHT_NUM` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `FLIGHT_NUM` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `model`
@@ -444,6 +416,12 @@ ALTER TABLE `model`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `aircraft`
+--
+ALTER TABLE `aircraft`
+  ADD CONSTRAINT `aircraft_ibfk_1` FOREIGN KEY (`MOD_CODE`) REFERENCES `model` (`MOD_CODE`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `flights`
